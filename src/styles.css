@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  background: rgb(6, 0, 16);
+  color-scheme: light;
+}
+.App {
+  font-family: sans-serif;
+  text-align: center;
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  appearance: button;
+  background-color: transparent;
+  background-image: none;
+}
