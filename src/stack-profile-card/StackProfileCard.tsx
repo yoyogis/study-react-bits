@@ -1,16 +1,21 @@
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import React from "react";
 import { useState } from "react";
+import "./StackProfileCard.css";
 import ProfileCard from "../profile-card/ProfileCard";
-import "./Stack.css";
 
-function CardRotate({ children, onSendToBack, sensitivity }) {
+interface CardRotateProps {
+  children: React.ReactNode;
+  onSendToBack: () => void;
+  sensitivity: number;
+}
+
+function CardRotate({ children, onSendToBack, sensitivity }: CardRotateProps) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useTransform(y, [-100, 100], [60, -60]);
   const rotateY = useTransform(x, [-100, 100], [-60, 60]);
 
-  function handleDragEnd(_, info) {
+  function handleDragEnd(_: never, info: { offset: { x: number; y: number } }) {
     if (
       Math.abs(info.offset.x) > sensitivity ||
       Math.abs(info.offset.y) > sensitivity
@@ -37,38 +42,24 @@ function CardRotate({ children, onSendToBack, sensitivity }) {
   );
 }
 
-export default function Stack({
-  randomRotation = false,
-  sensitivity = 200,
-  cardDimensions = { width: 208, height: 208 },
-  cardsData = [],
-  animationConfig = { stiffness: 260, damping: 20 },
-  sendToBackOnClick = false,
-}) {
-  const [cards, setCards] = useState(
-    cardsData.length
-      ? cardsData
-      : [
-          {
-            id: 1,
-            img: "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?q=80&w=500&auto=format",
-          },
-          {
-            id: 2,
-            img: "https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=500&auto=format",
-          },
-          {
-            id: 3,
-            img: "https://images.unsplash.com/photo-1452626212852-811d58933cae?q=80&w=500&auto=format",
-          },
-          {
-            id: 4,
-            img: "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?q=80&w=500&auto=format",
-          },
-        ]
-  );
+interface StackProps {
+  profiles?: Array<{
+    id: string;
+    name: string;
+    title: string;
+    status: string;
+    avatarUrl: string;
+  }>;
+}
 
-  const sendToBack = (id) => {
+export default function StackProfileCard({ profiles = [] }: StackProps) {
+  const randomRotation = false;
+  const sensitivity = 200;
+  const animationConfig = { stiffness: 260, damping: 20 };
+  const sendToBackOnClick = false;
+  const [cards, setCards] = useState(profiles);
+
+  const sendToBack = (id: string | number) => {
     setCards((prev) => {
       const newCards = [...prev];
       const index = newCards.findIndex((card) => card.id === id);
@@ -110,12 +101,12 @@ export default function Stack({
               }}
             >
               <ProfileCard
-                name="Javi A. Torres"
-                title="Software Engineer"
+                name={card.name}
+                title={card.title}
                 handle="javicodes"
-                status="Online"
+                status={card.status}
                 contactText="Contact Me"
-                avatarUrl="https://www.reactbits.dev/assets/person.png"
+                avatarUrl={card.avatarUrl}
                 showUserInfo={true}
                 enableTilt={true}
                 onContactClick={() => console.log("Contact clicked")}
